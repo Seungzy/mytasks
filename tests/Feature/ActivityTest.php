@@ -52,6 +52,40 @@ class ActivityTest extends TestCase
         $this->assertDatabaseMissing('tasks', ['id' => 999]);
     }
 
+    public function test_task_completion_can_be_set_and_reversed_without_changing_other_tasks(): void
+    {
+        $task = Task::create(['task_title' => 'Finish activity']);
+        $other = Task::create(['task_title' => 'Other task']);
+
+        $this->get('/tasks')->assertOk()->assertSee('Mark as complete');
+
+        foreach ([1, 1, 0] as $completed) {
+            $this->patch(route('tasks.completion', $task), [
+                'completed' => $completed,
+                'task_title' => 'Unwanted change',
+            ])->assertRedirect(route('tasks.index'))->assertSessionHas('success');
+
+            $this->assertDatabaseHas('tasks', [
+                'id' => $task->id, 'completed' => $completed, 'task_title' => 'Finish activity',
+            ]);
+            $this->assertDatabaseHas('tasks', ['id' => $other->id, 'completed' => false]);
+
+            $this->get('/tasks')->assertOk()
+                ->assertSee($completed ? 'Mark as incomplete' : 'Mark as complete');
+        }
+    }
+
+    public function test_completion_rejects_invalid_status_and_missing_tasks(): void
+    {
+        $task = Task::create(['task_title' => 'Finish activity']);
+        foreach ([[], ['completed' => 'invalid']] as $input) {
+            $this->patch(route('tasks.completion', $task), $input)
+                ->assertSessionHasErrors('completed');
+        }
+        $this->assertDatabaseHas('tasks', ['id' => $task->id, 'completed' => false]);
+        $this->patch('/tasks/999999/completion', ['completed' => 1])->assertNotFound();
+    }
+
     public function test_invalid_title_is_rejected_and_input_is_preserved(): void
     {
         $this->from('/tasks')->post('/tasks', [

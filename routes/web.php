@@ -12,3 +12,4 @@ Route::get('/about', [PageController::class, 'about']);
 Route::get('/tasks/{id}', [PageController::class, 'task']);
 Route::get('/tasks', [TaskController::class, 'index'])->name('tasks.index');
 Route::post('/tasks', [TaskController::class, 'store'])->name('tasks.store');
+Route::patch('/tasks/{task}/completion', [TaskController::class, 'updateCompletion'])->name('tasks.completion');

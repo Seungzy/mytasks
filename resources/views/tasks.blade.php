@@ -55,6 +55,12 @@
             <h3>{{ $task->task_title }}</h3>
             <p class="task-description">{{ $task->description ?: 'No description provided.' }}</p>
             <div class="task-meta"><span class="status {{ $task->completed ? 'status-complete' : '' }}"><span class="sr-only">Status: </span>{{ $task->completed ? 'Completed' : 'Not completed' }}</span><span class="task-id">#{{ str_pad($task->id, 2, '0', STR_PAD_LEFT) }}</span></div>
+            <form class="completion-form" action="{{ route('tasks.completion', $task) }}" method="POST">
+                @csrf
+                @method('PATCH')
+                <input type="hidden" name="completed" value="{{ $task->completed ? '0' : '1' }}">
+                <button class="completion-button" type="submit">{{ $task->completed ? 'Mark as incomplete' : 'Mark as complete' }}<span class="sr-only">: {{ $task->task_title }}</span></button>
+            </form>
             </div>
         </article>
     @empty
