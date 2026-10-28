@@ -1,0 +1,5 @@
+@extends('layouts.membership')
+@section('title','Transactions')
+@section('subtitle','Follow every application and renewal, from pending to approved.')
+@section('actions')<a class="btn" href="{{ route('transactions.create') }}">+ New transaction</a>@endsection
+@section('content')<form method="GET" class="filters panel"><div><label for="q">Find a transaction</label><input id="q" name="q" value="{{ request('q') }}" placeholder="Reference or member name"></div><div><label for="status">Status</label><select id="status" name="status"><option value="">All statuses</option>@foreach(['pending','paid','approved','expired','cancelled'] as $status)<option @selected(request('status')===$status) value="{{ $status }}">{{ ucfirst($status) }}</option>@endforeach</select></div><button class="btn">Filter</button><a class="text-link" href="{{ route('transactions.index') }}">Reset</a></form><section class="panel"><div class="panel-title"><h2>Transaction register</h2><span class="muted">{{ $transactions->total() }} records</span></div>@include('membership.transactions.table')@include('membership.pagination',['records'=>$transactions])</section>@endsection
