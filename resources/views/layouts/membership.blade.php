@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#142c44"><title>@yield('title', 'Membership') · Daylist</title><link rel="stylesheet" href="{{ asset('css/membership.css') }}"></head>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#03045e"><title>@yield('title', 'Membership') · Daylist</title><link rel="stylesheet" href="{{ asset('css/membership.css') }}?v={{ filemtime(public_path('css/membership.css')) }}"></head>
 <body><a class="skip" href="#main">Skip to content</a>
 <aside class="sidebar no-print"><a class="brand" href="{{ route('dashboard') }}"><span class="brand-icon">d.</span> daylist<span class="brand-dot">.</span></a><p class="nav-caption">MEMBERSHIP WORKSPACE</p>
 <nav aria-label="Main navigation">
